@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Login</title>
+    <link rel="stylesheet" href="/static/login.css" />
+    <style>
+        body {
+            background: url("/static/top-view-school-supplies-with-copy-space.jpg") no-repeat center center/cover;
+
+            font-family: Arial, sans-serif;
+            /* background: linear-gradient(to right, #FFB84D, #FFD700); */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            margin: 5px 0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FFB84D;
+            box-shadow: 0px 0px 5px rgba(255, 184, 77, 0.5);
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #FFB84D;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #E69A00;
+        }
+
+        .register {
+            background: #5cb85c;
+        }
+
+        .register:hover {
+            background: #4cae4c;
+        }
+
+        .back {
+            background: #888;
+        }
+
+        .back:hover {
+            background: #777;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+      Vue.component("user-login", {
+        data() {
+          return {
+            error: "",
+          };
+        },
+        template: `
+        <div>
+          <form class="container" action="/user-login" method="post">
+
+            <p v-if="error" class="error-message">{{ error }}</p>
+
+            <h2>User Login</h2>
+
+            <div>
+              <p>Email</p>
+              <input type="text" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div>
+              <p>Password</p>
+              <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit">Login</button>
+
+            <div class="links">
+              <a href="/register">
+                <button type="button" class="register">Sign Up</button>
+              </a>
+              <a href="/">
+                <button type="button" class="back">Back</button>
+              </a>
+            </div>
+
+          </form>
+        </div>
+      `,
+      });
+
+      new Vue({
+        el: "#app",
+        template: "<user-login/>",
+      });
+    </script>
+</body>
+</html>
+
+

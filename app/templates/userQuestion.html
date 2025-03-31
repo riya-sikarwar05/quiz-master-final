@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 2 Quiz App</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+        .quiz-card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .quiz-card h3 {
+            margin-bottom: 10px;
+        }
+        .quiz-card label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h2>Quiz</h2>
+        {% raw %}
+        <div v-for="(question, index) in Questions" :key="question.question_id" class="quiz-card">
+            <h3>{{ question.question_title }}</h3>
+            <p>{{ question.question_statement }}</p>
+            <label>
+                <input type="radio" :name="'q' + index" :value="question.option1" v-model="userAnswers[index]">
+                {{ question.option1 }}
+            </label>
+            <label>
+                <input type="radio" :name="'q' + index" :value="question.option2" v-model="userAnswers[index]">
+                {{ question.option2 }}
+            </label>
+            <label>
+                <input type="radio" :name="'q' + index" :value="question.option3" v-model="userAnswers[index]">
+                {{ question.option3 }}
+            </label>
+            <label>
+                <input type="radio" :name="'q' + index" :value="question.option4" v-model="userAnswers[index]">
+                {{ question.option4 }}
+            </label>
+        </div>
+        <button class="submit-btn" @click="submitQuiz">Submit</button>
+        <p v-if="message">{{ message }}</p>
+        {% endraw %}
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                Questions: [],
+                userAnswers: [], // Stores selected answers
+                message: ""
+            },
+            created() {
+                const url = window.location.href;
+                const parts = url.split('/');
+                const number = parts[parts.length - 1];
+
+                if (number) {
+                    fetch(`/API/QuizQuestions/${number}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.Questions = data;
+                            this.userAnswers = new Array(data.length).fill(null); // Initialize answers array
+                        })
+                        .catch(error => console.error('Error fetching questions:', error));
+                }
+            },
+            methods: {
+                submitQuiz() {
+                    let score = 0;
+
+                    this.Questions.forEach((question, index) => {
+                        if (this.userAnswers[index] === question.correct_option) {
+                            score += question.no_question; // Give marks if answer is correct
+                        }
+                    });
+
+                    fetch('/scoreData', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ score: score })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const totalMarks = this.Questions.reduce((sum, q) => sum + q.no_question, 0);
+                        this.message = `Your score: ${score}/${totalMarks}`;
+                    })
+                    .catch(error => console.error('Error submitting quiz:', error));
+                }
+            }
+        });
+    </script>
+</body>
+</html>

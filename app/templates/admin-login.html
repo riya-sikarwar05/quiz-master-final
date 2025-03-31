@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/static/login.css" />
+    <style>
+        /* Background Image */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url("/static/top-view-school-supplies-with-copy-space.jpg") no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Login Box */
+        .login-box {
+            background: rgba(0, 0, 0, 0.6); /* Darkened background */
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 12px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Logo */
+        .logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        /* Title */
+        h2 {
+            color: #fff;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Input Fields */
+        .input-container {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .input-container p {
+            margin: 5px 0;
+            color: #f1f1f1;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-container input:focus {
+            box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Buttons Wrapper */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        /* Rounded Login Button */
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: #ffb400;
+            border: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px; /* Rounded Shape */
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(255, 180, 0, 0.4);
+        }
+
+        .login-button:hover {
+            background: #ff9800;
+            box-shadow: 0px 6px 14px rgba(255, 152, 0, 0.6);
+        }
+
+        /* Rounded Transparent Back Button */
+        .back-button {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            font-size: 15px;
+            border-radius: 25px; /* Rounded Shape */
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px solid white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+      Vue.component("admin-login", {
+        data() {
+          return {
+            error: "",
+          };
+        },
+        template: `
+        <div class="login-box">
+          
+          <p v-if="error" class="error-message">{{ error }}</p>
+
+          <h2>Admin Login</h2>
+
+          <form action="/admin-login" method="post">
+
+            <div class="input-container">
+              <p>Email</p>
+              <input type="text" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="input-container">
+              <p>Password</p>
+              <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="buttons">
+              <button type="submit" class="login-button">Login</button>
+              <a href="/">
+                <button type="button" class="back-button">Back</button>
+              </a>
+            </div>
+
+          </form>
+        </div>
+      `,
+      });
+
+      new Vue({
+        el: "#app",
+        template: "<admin-login/>",
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Chapter</title>
+    <link rel="stylesheet" href="/static/adminView.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/Quiz">Quiz</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/statistics">Summary</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="position-absolute top-0 end-0 m-3">
+        <button type="button" class="new-Chapter-btn" data-bs-toggle="modal" data-bs-target="#addChapterModal">
+            New Chapter
+        </button>        
+    </div>
+    
+    
+    <div class="modal fade" id="addChapterModal" tabindex="-1" aria-labelledby="addChapterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addChapterModalLabel">Add New Quiz</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="ChapterForm">
+                        <div class="mb-3">
+                            <label for="ChapterName" class="form-label">Chapter Name</label>
+                            <input type="text" class="form-control" id="ChapterName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ChapterDescription" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="ChapterDescription" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="location.reload();">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#ChapterForm").on("submit", function (event) {
+                event.preventDefault();
+        
+                // Extract subject_id from URL
+                const url = window.location.href;
+                const parts = url.split('/');
+                const subject_id = parts[parts.length - 1]; // Get last part of URL
+        
+                let formData = {
+                    Chapter_name: $("#ChapterName").val(),
+                    description: $("#ChapterDescription").val(),
+                    user_id: 1,
+                    subject_id: subject_id // Use extracted subject_id
+                };
+        
+                $.ajax({
+                    type: "POST",
+                    url: "/Add-Chapter",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log("Response from server:", response);
+                        $("#addChapterModal").modal("hide");
+                        location.reload(); // Reload the page after success
+                    },
+                    error: function (error) {
+                        console.error("Error:", error);
+                        $("#addChapterModal").modal("hide");
+                    }
+                });
+            });
+        });        
+    </script>
+    <div id="app">
+        {% raw %}
+        <div v-for="Chapter in Chapters" :key="Chapter.chapter_id" class="card">
+            <button class="delete-btn" @click.stop="deleteChapter(Chapter.chapter_id)" onclick="location.reload();">✖</button>
+            <a :href="'http://127.0.0.1:5000/AdminQuiz/' + Chapter.chapter_id" class="card-link">
+                <h3>{{ Chapter.chapter_name }}</h3>
+                <p>{{ Chapter.description }}</p>
+            </a>
+        </div>
+        {% endraw %}
+    </div>
+    
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                Chapters: []
+            },
+    
+            created() {
+                // Get the subject from the URL
+                const url = window.location.href;
+                const parts = url.split('/');
+                const number = parts[parts.length - 1]; // Get the last part of the URL
+                
+                if (number) {
+                    // Fetch data based on subject
+                    fetch(`/API/SubjectChapters/${number}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.Chapters = data;
+                        })
+                        .catch(error => console.error('Error fetching chapters:', error));
+                } else {
+                    console.error("No subject found in the URL.");
+                }
+            },
+            methods: {
+                deleteChapter(chapter_id) {
+                    if (confirm("Are you sure you want to delete this Chapter?")) {
+                        fetch(`http://localhost:5000/API/Chapters/${chapter_id}`, {
+                            method: 'DELETE'
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Remove the deleted chapter from the list
+                                this.Chapters = this.Chapters.filter(chapter => chapter.id !== chapter_id);
+                            } else {
+                                alert("Failed to delete the Chapter.");
+                            }
+                        })
+                        .catch(error => console.error('Error deleting chapter:', error));
+                    }
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>

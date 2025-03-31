@@ -1,0 +1,5 @@
+question_title,question_statement,option1,option2,option3,option4,correct_option,no_question
+system commands,what is ls ?,list,directory,file,folder,list,5
+ssc,what is ls cd?,current,head,previous,nothing,current,3
+sc,what is hardlink?combine,,seperate,independant,same,nothing,5
+sc,what is ubuntu,linux,mac,windows,unix,nothing,4

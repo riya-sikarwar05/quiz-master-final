@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Table</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Score Table</h2>
+
+        <form method="get" class="search-form">
+            <input type="text" name="search" placeholder="Search..." value="{{ search_query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th><a href="?sort=id&order={{ 'desc' if sort_by == 'id' and order == 'asc' else 'asc' }}">ID</a></th>
+                    <th><a href="?sort=score&order={{ 'desc' if sort_by == 'score' and order == 'asc' else 'asc' }}">Score</a></th>
+                    <th><a href="?sort=date&order={{ 'desc' if sort_by == 'date' and order == 'asc' else 'asc' }}">Date</a></th>
+                    <th><a href="?sort=user_name&order={{ 'desc' if sort_by == 'user_name' and order == 'asc' else 'asc' }}">User</a></th>
+                    <th><a href="?sort=subject_name&order={{ 'desc' if sort_by == 'subject_name' and order == 'asc' else 'asc' }}">Subject</a></th>
+                    <th><a href="?sort=chapter_name&order={{ 'desc' if sort_by == 'chapter_name' and order == 'asc' else 'asc' }}">Chapter</a></th>
+                    <th><a href="?sort=quiz_name&order={{ 'desc' if sort_by == 'quiz_name' and order == 'asc' else 'asc' }}">Quiz</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                <tr>
+                    <td>{{ score.id }}</td>
+                    <td>{{ score.score }}</td>
+                    <td>{{ score.date }}</td>
+                    <td>{{ score.user_name }}</td>
+                    <td>{{ score.subject_name }}</td>
+                    <td>{{ score.chapter_name }}</td>
+                    <td>{{ score.quiz_name if score.quiz_name else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

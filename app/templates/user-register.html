@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/static/login.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #FFD700, #FFB84D);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            margin: 5px 0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FFB84D;
+            box-shadow: 0px 0px 5px rgba(255, 184, 77, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #FFB84D;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #E69A00;
+        }
+
+        .back {
+            background: #888;
+            margin-top: 10px;
+        }
+
+        .back:hover {
+            background: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/register" method="post" class="container">
+        <h2>User Registration</h2>
+
+        <p>Email</p>
+        <input type="email" name="email" placeholder="Enter your email" required />
+
+        <p>Password</p>
+        <input type="password" name="password" placeholder="Enter your password" required/>
+
+        <p>Qualification</p>
+        <input type="text" name="qualification" placeholder="Your qualification">
+
+        <p>Date of Birth</p>
+        <input type="number" name="dob">
+
+        <button id="sign-up" type="submit">Register</button>
+
+        <a href="/">
+            <button type="button" id="back" class="back">Back</button>
+        </a>
+    </form>
+
+</body>
+</html>

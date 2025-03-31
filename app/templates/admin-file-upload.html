@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 2 + Flask Quiz</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container, .admin-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .question-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 5px 0;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        {% raw %}
+        <div class="admin-panel">
+            <h2>Admin Panel - All Questions</h2>
+            <div v-for="Question in Questions" :key="Question.question_id" class="question-card">
+                <p><strong>Title:</strong> {{ Question.question_title }}</p>
+                <p><strong>Statement:</strong> {{ Question.question_statement }}</p>
+                <p><strong>Options:</strong></p>
+                <ul>
+                    <li>1: {{ Question.option1 }}</li>
+                    <li>2: {{ Question.option2 }}</li>
+                    <li>3: {{ Question.option3 }}</li>
+                    <li>4: {{ Question.option4 }}</li>
+                </ul>
+                <p><strong>Correct Option:</strong> {{ Question.correct_option }}</p>
+                <p><strong>Question ID:</strong> {{ Question.question_id }}</p>
+                <p><strong>Total Questions:</strong> {{ Question.no_question }}</p>
+            </div>
+        </div>
+        {% endraw %}
+    </div>
+    
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                Questions: [],
+                message: ""
+            },
+            created() {
+                const url = window.location.href;
+                const parts = url.split('/');
+                const number = parts[parts.length - 1];
+                if (number) {
+                    fetch(`/API/QuizQuestions/${number}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.Questions = data.map(q => ({ ...q, selected: null }));
+                        })
+                        .catch(error => console.error('Error fetching Question:', error));
+                }
+            },
+            methods: {
+                submitQuiz() {
+                    let score = 0;
+                    this.Questions.forEach(q => {
+                        if (q.selected === q[`option${q.correct_option}`]) {
+                            score++;
+                        }
+                    });
+                    fetch('/scoreData', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ score })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.message = `Your final score is: ${score}/${this.Questions.length}`;
+                    })
+                    .catch(error => {
+                        console.error('Error submitting score:', error);
+                        this.message = 'Error submitting score';
+                    });
+                }
+            }
+        });
+    </script>
+
+    <div id="appcsv" class="container">
+        <h2>Upload a CSV File</h2>
+        <label for="file-upload" class="custom-file-upload">Choose File</label>
+        <input type="file" id="file-upload" accept=".csv" @change="handleFileUpload">
+        <p v-if="filename">Selected File: {{ filename }}</p>
+        <button @click="uploadFile" onclick="location.reload();">Upload</button>
+        <p class="message">{{ message }}</p>
+    </div>
+    <script>
+        new Vue({
+            el: "#appcsv", 
+            data: {
+                file: null,
+                filename: "",
+                message: ""
+            },
+            methods: {
+                handleFileUpload(event) {
+                    const selectedFile = event.target.files[0];
+                    if (selectedFile && selectedFile.type === "text/csv") {
+                        this.file = selectedFile;
+                        this.filename = selectedFile.name;
+                    } else {
+                        this.message = "Please select a valid CSV file!";
+                        this.file = null;
+                        this.filename = "";
+                    }
+                },
+                uploadFile() {
+                    if (!this.file) {
+                        this.message = "Please select a file!";
+                        return;
+                    }
+                    let formData = new FormData();
+                    formData.append("file", this.file);
+                    fetch("/upload", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.message = data.message;
+                    })
+                    .catch(error => {
+                        this.message = "Error uploading file!";
+                        console.error("Upload Error:", error);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

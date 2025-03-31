@@ -1,0 +1,2 @@
+global quizID
+quizID = None
