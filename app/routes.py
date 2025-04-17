@@ -8,6 +8,22 @@ from werkzeug.utils import secure_filename
 from flask_caching import Cache
 from .utils import send_pdf_to_users, pdfReport
 from .models import ScoreView, db
+from flask_caching import Cache
+from app.mail import emailtrigger
+from app.mail import emailtriggerPDF
+
+
+
+config = {
+    "DEBUG": True,
+    "CACHE_TYPE": "SimpleCache", 
+    "CACHE_DEFAULT_TIMEOUT": 300,
+    "CACHE_KEY_PREFIX": 'mycache'
+}
+
+app.config.from_mapping(config)
+cache = Cache(app)
+
 
 # Configure upload folder and allowed file types
 UPLOAD_FOLDER = "uploads"
@@ -60,7 +76,10 @@ def UserQuestion(quiz_id):
     session['quizID'] = quiz_id
     return render_template("userQuestion.html")
 
+
+
 @app.route("/admin/statistics")
+@cache.cached(timeout=600)
 def admin_statistics():
     return render_template("admin-statistics.html")
 
@@ -372,3 +391,16 @@ def scoreData():
 
     return jsonify({"message": "GET method not allowed"}), 405  # Return a response for GET requests
 
+@app.route("/mailtrigger")
+def mailtrigger():
+    emailtrigger()
+    return render_template("admin-statistics.html")
+
+@app.route("/mailtriggerPDF")
+def mailtriggerPDF():
+    emailtriggerPDF()
+    return render_template("admin-quiz.html")
+
+@app.route("/userQUIZES")
+def userQUIZES():
+    return render_template("userQUIZES.html")

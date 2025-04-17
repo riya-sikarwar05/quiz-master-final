@@ -11,6 +11,13 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #FFD700, #FFFACD);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         .stat-card {
             transition: transform 0.3s ease;
             border-radius: 10px;
@@ -85,6 +92,9 @@
     </style>
 </head>
 <body class="bg-light">
+    <div>
+        <a href="/mailtrigger">send mail</a>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -157,9 +167,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="fw-bold">Admin Statistics Dashboard</h2>
                     <div class="d-flex">
-                        <button class="btn btn-primary me-2" id="refreshData">
-                            <i class="fas fa-sync-alt me-1"></i> Refresh Data
-                        </button>
+                        
                         <div class="dropdown">
                             <button class="btn btn-outline-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-download me-1"></i> Export
@@ -185,56 +193,28 @@
                     <div class="col-md-3 mb-4">
                         <div class="stat-card card bg-white p-4 text-center">
                             <i class="fas fa-book card-icon text-success"></i>
-                            <h3 class="fw-bold" id="totalSubjects">8</h3>
+                            <h3 class="fw-bold" id="totalSubjects">6</h3>
                             <p class="text-muted mb-0">Total Subjects</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
                         <div class="stat-card card bg-white p-4 text-center">
                             <i class="fas fa-bookmark card-icon text-warning"></i>
-                            <h3 class="fw-bold" id="totalChapters">0</h3>
+                            <h3 class="fw-bold" id="totalChapters">11</h3>
                             <p class="text-muted mb-0">Total Chapters</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-4">
                         <div class="stat-card card bg-white p-4 text-center">
                             <i class="fas fa-clipboard-list card-icon text-info"></i>
-                            <h3 class="fw-bold" id="totalQuizzes">0</h3>
+                            <h3 class="fw-bold" id="totalQuizzes">1</h3>
                             <p class="text-muted mb-0">Total Quizzes</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Charts Row -->
-                <div class="row mb-4">
-                    <div class="col-md-6 mb-4">
-                        <div class="chart-container">
-                            <h5 class="mb-3">User Roles Distribution</h5>
-                            <canvas id="userRolesChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="chart-container">
-                            <h5 class="mb-3">Quiz Performance</h5>
-                            <canvas id="quizPerformanceChart"></canvas>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="row mb-4">
-                    <div class="col-md-6 mb-4">
-                        <div class="chart-container">
-                            <h5 class="mb-3">Chapters per Subject</h5>
-                            <canvas id="chaptersPerSubjectChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="chart-container">
-                            <h5 class="mb-3">User Activity</h5>
-                            <canvas id="userActivityChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+                
                 
                 <!-- Tables -->
                 <div class="row">
@@ -253,10 +233,21 @@
                                                 <th>Email</th>
                                                 <th>Qualification</th>
                                                 <th>Role</th>
-                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody id="usersTableBody">
+                                            <tr>
+                                                <th>1</th>
+                                                <th>user@gmail.com</th>
+                                                <th>b.tech</th>
+                                                <th>user</th>
+                                            </tr>
+                                            <tr>
+                                                <th>2</th>
+                                                <th>riyasikarwar@gmail.com</th>
+                                                <th>b.tech</th>
+                                                <th>user</th>
+                                            </tr>
                                             <!-- User data will be inserted here -->
                                         </tbody>
                                     </table>
@@ -281,42 +272,41 @@
                                                 <th>ID</th>
                                                 <th>Subject Name</th>
                                                 <th>Description</th>
-                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody id="subjectsTableBody">
+                                            <tr>
+                                                <th>1</th>
+                                                <th>Biology</th>
+                                                <th>zoology</th>
+                                            </tr>
+                                            <tr>
+                                                <th>2</th>
+                                                <th>maths</th>
+                                                <th>cal</th>
+                                            </tr>
+                                            <tr>
+                                                <th>3</th>
+                                                <th>dsf</th>
+                                                <th>ghhhh</th>
+                                            </tr>
+                                            <tr>
+                                                <th>4</th>
+                                                <th>test</th>
+                                                <th>test01</th>
+                                            </tr>
+                                            <tr>
+                                                <th>5</th>
+                                                <th>CT</th>
+                                                <th>Think</th>
+                                            </tr>
                                             <!-- Subject data will be inserted here -->
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                                <h6 class="m-0 fw-bold text-primary">Recent Quizzes</h6>
-                                <button class="btn btn-sm btn-primary" id="viewAllQuizzes">View All</button>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="quizzesTable">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Quiz Name</th>
-                                                <th>Date</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="quizzesTableBody">
-                                            <!-- Quiz data will be inserted here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
